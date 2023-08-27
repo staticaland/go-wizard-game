@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"time"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
@@ -51,13 +52,15 @@ func (bs *Bullets) Draw(screen *ebiten.Image) {
 }
 
 type Circle struct {
-	x, y float64
+	x, y     float64
+	lastShot int64
 }
 
 func NewCircle() *Circle {
 	return &Circle{
-		x: 400,
-		y: 300,
+		x:        400,
+		y:        300,
+		lastShot: time.Now().UnixNano(),
 	}
 }
 
@@ -74,8 +77,9 @@ func (c *Circle) Update(bullets *Bullets) {
 		c.x += circleSpeed
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeySpace) {
+	if ebiten.IsKeyPressed(ebiten.KeySpace) && time.Now().UnixNano()-c.lastShot >= 1000000000 {
 		*bullets = append(*bullets, NewBullet(c.x, c.y, 0, -2))
+		c.lastShot = time.Now().UnixNano()
 	}
 
 	bullets.Update()
