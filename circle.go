@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	circleRadius = 50
-	circleSpeed  = 2
+	playerRadius = 50
+	playerSpeed  = 2
 	bulletSize   = 4
 )
 
@@ -51,41 +51,41 @@ func (bs *Bullets) Draw(screen *ebiten.Image) {
 	}
 }
 
-type Circle struct {
+type Player struct {
 	x, y     float64
 	lastShot int64
 }
 
-func NewCircle() *Circle {
-	return &Circle{
+func NewPlayer() *Player {
+	return &Player{
 		x:        400,
 		y:        300,
 		lastShot: time.Now().UnixNano(),
 	}
 }
 
-func (c *Circle) Update(bullets *Bullets) {
+func (p *Player) Update(bullets *Bullets) {
 	if ebiten.IsKeyPressed(ebiten.KeyUp) {
-		c.y -= circleSpeed
+		p.y -= playerSpeed
 	} else if ebiten.IsKeyPressed(ebiten.KeyDown) {
-		c.y += circleSpeed
+		p.y += playerSpeed
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
-		c.x -= circleSpeed
+		p.x -= playerSpeed
 	} else if ebiten.IsKeyPressed(ebiten.KeyRight) {
-		c.x += circleSpeed
+		p.x += playerSpeed
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeySpace) && time.Now().UnixNano()-c.lastShot >= 1000000000 {
-		*bullets = append(*bullets, NewBullet(c.x, c.y, 0, -2))
-		c.lastShot = time.Now().UnixNano()
+	if ebiten.IsKeyPressed(ebiten.KeySpace) && time.Now().UnixNano()-p.lastShot >= 1000000000 {
+		*bullets = append(*bullets, NewBullet(p.x, p.y, 0, -2))
+		p.lastShot = time.Now().UnixNano()
 	}
 
 	bullets.Update()
 }
 
-func (c *Circle) Draw(screen *ebiten.Image, bullets *Bullets) {
-	ebitenutil.DrawRect(screen, c.x-circleRadius, c.y-circleRadius, circleRadius*2, circleRadius*2, color.RGBA{255, 0, 0, 255})
+func (p *Player) Draw(screen *ebiten.Image, bullets *Bullets) {
+	ebitenutil.DrawRect(screen, p.x-playerRadius, p.y-playerRadius, playerRadius*2, playerRadius*2, color.RGBA{255, 0, 0, 255})
 	bullets.Draw(screen)
 }

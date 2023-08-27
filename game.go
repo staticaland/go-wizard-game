@@ -5,26 +5,26 @@ import (
 )
 
 type Game struct {
-	circle  *Circle
+	player  *Player
 	bullets *Bullets
 }
 
 func NewGame() *Game {
-	circle := NewCircle()
+	player := NewPlayer()
 
 	return &Game{
-		circle:  circle,
+		player:  player,
 		bullets: &Bullets{},
 	}
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
-	g.circle.Update(g.bullets)
+	g.player.Update(g.bullets)
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.circle.Draw(screen, g.bullets)
+	g.player.Draw(screen, g.bullets)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
